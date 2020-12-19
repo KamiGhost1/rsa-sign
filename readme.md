@@ -23,3 +23,11 @@ make
 ```
 ./e --check-sign
 ```
+- Encrypt msg 
+```
+./e -e
+```
+- Decrypt msg
+```
+./e -d
+```
