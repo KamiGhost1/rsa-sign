@@ -32,7 +32,13 @@ void rsaSign::start(int C, char **V){
         this->Encrypt();
     }
     if(mode == 4){
-        this->Decript();
+        this->Decrypt();
+    }
+    if(mode == 5){
+        this->EncryptFile(V[3],V[5]);
+    }
+    if(mode == 6){
+        this->DecryptFile(V[3],V[5]);
     }
 }
 
@@ -118,6 +124,14 @@ int rsaSign::testParam(int C, char **V) {
             cout<<"enter z: ";
             cin>>c;
             this->modFunc(a,b,c);
+        }
+    }
+    if(C == 6){
+        if(!strcmp(V[1],"-e") && !strcmp(V[2],"-i") && !strcmp(V[4],"-o")){
+            return 5;
+        }
+        if(!strcmp(V[1],"-d") && !strcmp(V[2],"-i") && !strcmp(V[4],"-o")){
+            return 6;
         }
     }
     cout<<"use -h for help"<<endl;
@@ -343,4 +357,55 @@ void rsaSign::Decrypt() {
     cin>>mod;
     int eMsg = modFunc(msg, d, mod);
     cout<<"Decrypt msg = "<<eMsg<<endl;
+}
+
+void rsaSign::EncryptFile(char *input, char *output) {
+    FILE *fin=fopen(input,"r");
+    if(!fin){
+        cout<<"file not found!!"<<endl;
+        exit(2);
+    }
+    FILE *fout=fopen(output,"w");
+    cout<<"Enter PK: ";
+    cin>>e;
+    cout<<"Enter N: ";
+    cin>>mod;
+    char ch;
+    int symb;
+    while((ch=fgetc(fin)) != EOF){
+        symb = (int)ch;
+        cout<<symb<<" ";
+        symb = modFunc(symb,e,mod);
+        cout<<symb<<" ";
+        ch = (char)symb;
+        cout<<ch<<" "<<(int)ch<<endl;
+        fwrite(&symb, sizeof(char),1,fout);
+    }
+    fcloseall();
+    cout<<"the file "<<input<<" was encrypted and saved in "<<output<<endl;
+}
+void rsaSign::DecryptFile(char *input, char *output) {
+    FILE *fin=fopen(input,"r");
+    if(!fin){
+        cout<<"file not found!!"<<endl;
+        exit(2);
+    }
+    FILE *fout=fopen(output,"w");
+    cout<<"Enter SK: ";
+    cin>>d;
+    cout<<"Enter N: ";
+    cin>>mod;
+    char ch;
+    int symb;
+    while((ch=fgetc(fin)) != EOF){
+        symb = (int)ch;
+        cout<<symb<<" ";
+        symb = modFunc(symb,d,mod);
+        cout<<symb<<" ";
+        ch = (char)symb;
+        cout<<ch<<" "<<(int)ch<<endl;
+        fwrite(&symb, sizeof(char),1,fout);
+    }
+    fcloseall();
+    cout<<"the file "<<input<<" was decrypted and saved in "<<output<<endl;
 }

@@ -41,6 +41,8 @@ public:
         int modFunc(int x, int y, int z);
         void Encrypt();
         void Decrypt();
+        void EncryptFile(char *input, char *output);
+        void DecryptFile(char *input, char *output);
 private:
         int mod,phi,p,q,e,d, msg;
         vector<int>Es, Ds;
