@@ -28,6 +28,12 @@ void rsaSign::start(int C, char **V){
     if(mode==2){
         this->CheckSign();
     }
+    if(mode == 3){
+        this->Encrypt();
+    }
+    if(mode == 4){
+        this->Decript();
+    }
 }
 
 void rsaSign::help() {
@@ -96,6 +102,12 @@ int rsaSign::testParam(int C, char **V) {
         }
         if(!strcmp(V[1],"--check-sign")){
             return 2;
+        }
+        if(!strcmp(V[1],"-e")){
+            return 3;
+        }
+        if(!strcmp(V[1],"-d")){
+            return 4;
         }
         if(!strcmp(V[1],"--mod")){
             int a,b,c;
@@ -309,4 +321,26 @@ void rsaSign::CheckSign() {
     cin>>mod;
     int dMsg = modFunc(msg, e, mod);
     cout<<"Msg = "<<dMsg<<endl;
+}
+
+void rsaSign::Encrypt() {
+    cout<<"Enter message: ";
+    cin>>msg;
+    cout<<"Enter PK: ";
+    cin>>e;
+    cout<<"Enter N: ";
+    cin>>mod;
+    int dMsg = modFunc(msg, e, mod);
+    cout<<"encrypt msg = "<<dMsg<<endl;
+}
+
+void rsaSign::Decript() {
+    cout<<"Enter encrypt message: ";
+    cin>>msg;
+    cout<<"Enter SK: ";
+    cin>>d;
+    cout<<"Enter N: ";
+    cin>>mod;
+    int eMsg = modFunc(msg, d, mod);
+    cout<<"Decrypt msg = "<<eMsg<<endl;
 }

@@ -39,6 +39,8 @@ public:
         void Sign();
         void CheckSign();
         int modFunc(int x, int y, int z);
+        void Encrypt();
+        void Decript();
 private:
         int mod,phi,p,q,e,d, msg;
         vector<int>Es, Ds;
