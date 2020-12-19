@@ -64,15 +64,34 @@ int rsaSign::testParam(int C, char **V) {
             cin>>b;
             cout<<"function Euler = "<<fEuler(a,b)<<endl;
         }
-        if(!strcmp(V[1],"-es")){
-            int a;
-            cout<<"enter phi: ";
+        if(!strcmp(V[1],"-es1")){
+            int a,b,c;
+            cout<<"enter i: ";
             cin>>a;
-            cout<<"function Es = "<<countEs(a)<<endl;
-            viewEs();
+            cout<<"enter d: ";
+            cin>>b;
+            cout<<"enter phi: ";
+            cin>>c;
+            cout<<"function Es = "<<countEs(a,b,c)<<endl;
         }
         if(!strcmp(V[1],"-sk")){
             generatePairKey();
+        }
+        if(!strcmp(V[1],"--sign")){
+            this->Sign();
+        }
+        if(!strcmp(V[1],"--check-sign")){
+            this->CheckSign();
+        }
+        if(!strcmp(V[1],"--mod")){
+            int a,b,c;
+            cout<<"enter x: ";
+            cin>>a;
+            cout<<"enter y: ";
+            cin>>b;
+            cout<<"enter z: ";
+            cin>>c;
+            this->modFunc(a,b,c);
         }
     }
     return -1;
@@ -82,6 +101,15 @@ void rsaSign::showData() {
     cout<<"PK: "<<e<<endl;
     cout<<"SK: "<<d<<endl;
     cout<<"N:  "<<mod<<endl;
+}
+
+void rsaSign::showAllData() {
+    cout<<"PK: "<<e<<endl;
+    cout<<"SK: "<<d<<endl;
+    cout<<"N:  "<<mod<<endl;
+    cout<<"phi: "<<phi<<endl;
+    cout<<"P: "<<p<<endl;
+    cout<<"Q: "<<q<<endl;
 }
 
 void rsaSign::enterSimple() {
@@ -142,17 +170,8 @@ int rsaSign::fEuler(int p, int q) {
     return (p-1)*(q-1);
 }
 
-int rsaSign::countEs(int PHI) {
-    //int check;
-    bool testSimple;
-    for(int i=3;i<PHI;i++){
-        testSimple = checkSimple(i);
-        //check = GCD(i,PHI);
-        if(testSimple){
-            Es.push_back(i);
-        }
-    }
-    return 0;
+int rsaSign::countEs(int num, int n, int PHI) {
+    return (num*n)%PHI;
 }
 
 void rsaSign::viewEs() {
@@ -170,8 +189,18 @@ bool rsaSign::checkEsChoose(int num) {
     return false;
 }
 
-int rsaSign::countDs(int num, int n, int exp) {
-    return (num*n)%exp;
+
+int rsaSign::countDs(int PHI) {
+    bool testSimple = 1;
+    int check;
+    for(int i=3;i<PHI;i++){
+        //testSimple = checkSimple(i);
+        check = GCD(i,PHI);
+        if(testSimple && check==1){
+            Ds.push_back(i);
+        }
+    }
+    return 0;
 }
 
 void rsaSign::viewDs() {
@@ -189,12 +218,18 @@ bool rsaSign::checkDsChoose(int num) {
     return false;
 }
 
-int rsaSign::generateSkey(int n, int exp) {
+
+int rsaSign::generateSkey(int PHI) {
+   countDs(PHI);
+    return 0;
+}
+
+int rsaSign::generatePkey(int D, int PHI) {
     int check;
     for(int i = 3;i<MAX_GENERATE_D;i++){
-        check = countDs(i,n,exp);
+        check = countEs(i,D,PHI);
         if(check==1){
-            Ds.push_back(i);
+            Es.push_back(i);
         }
     }
     return 0;
@@ -205,24 +240,58 @@ int rsaSign::generatePairKey() {
     enterSimple();
     mod = p*q;
     phi = this->fEuler(p,q);
-    countEs(phi);
-    while(!ChooseEs){
-        viewEs();
-        cout<<"choose 1 from list and enter: ";
-        cin>>e;
-        ChooseEs = checkEsChoose(e);
-    }
 #ifdef debag_main
     cout<<mod<<" "<<phi<<endl;
 #endif
-    generateSkey(e,phi);
-    ChooseEs = false;
+    generateSkey(phi);
     while(!ChooseEs){
         viewDs();
         cout<<"choose 1 from list and enter: ";
         cin>>d;
         ChooseEs = checkDsChoose(d);
     }
-    showData();
+    generatePkey(d,phi);
+    ChooseEs = 0;
+    while(!ChooseEs){
+        viewEs();
+        cout<<"choose 1 from list and enter: ";
+        cin>>e;
+        ChooseEs = checkEsChoose(e);
+    }
+    showAllData();
     return 0;
+}
+
+int rsaSign::modFunc(int x, int y, int z){
+    int buf = x;
+    for(int i = 1;i<y;i++){
+        buf*=x;
+        buf%=z;
+    }
+#ifdef debag_main
+    cout<<buf<<endl;
+#endif
+    return buf;
+}
+
+void rsaSign::Sign() {
+    cout<<"Enter message: ";
+    cin>>msg;
+    cout<<"Enter SK: ";
+    cin>>d;
+    cout<<"Enter N: ";
+    cin>>mod;
+    int eMsg = modFunc(msg, d, mod);
+    cout<<"Signed msg = "<<eMsg<<endl;
+}
+
+void rsaSign::CheckSign() {
+    cout<<"Enter message: ";
+    cin>>msg;
+    cout<<"Enter PK: ";
+    cin>>e;
+    cout<<"Enter N: ";
+    cin>>mod;
+    int dMsg = modFunc(msg, e, mod);
+    cout<<"Msg= "<<dMsg<<endl;
 }

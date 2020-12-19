@@ -10,7 +10,7 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
-#define MAX_GENERATE_D 100
+#define MAX_GENERATE_D 1000
 //#define debag_main
 
 using namespace std;
@@ -21,21 +21,26 @@ public:
         int GCD (int a, int b);
         int testParam(int C, char **V);
         int generatePairKey();
-        int generateSkey( int n, int exp);
+        int generateSkey(int PHI);
+        int generatePkey(int D, int PHI);
         void opener();
         void help();
         bool checkSimple(int num);
         int fEuler(int p,int q);
-        int countEs(int PHI);
+        int countEs(int PHI, int num, int n);
         void viewEs();
         bool checkEsChoose(int num);
-        int countDs(int num, int n, int exp);
+        int countDs(int PHI);
         void viewDs();
         bool checkDsChoose(int num);
         void enterSimple();
         void showData();
+        void showAllData();
+        void Sign();
+        void CheckSign();
+        int modFunc(int x, int y, int z);
 private:
-        int mod,phi,p,q,e,d;
+        int mod,phi,p,q,e,d, msg;
         vector<int>Es, Ds;
 };
 
