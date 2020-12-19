@@ -286,12 +286,12 @@ void rsaSign::Sign() {
 }
 
 void rsaSign::CheckSign() {
-    cout<<"Enter message: ";
+    cout<<"Enter signed message: ";
     cin>>msg;
     cout<<"Enter PK: ";
     cin>>e;
     cout<<"Enter N: ";
     cin>>mod;
     int dMsg = modFunc(msg, e, mod);
-    cout<<"Msg= "<<dMsg<<endl;
+    cout<<"Msg = "<<dMsg<<endl;
 }
