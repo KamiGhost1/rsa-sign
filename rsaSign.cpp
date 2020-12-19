@@ -19,10 +19,23 @@ void rsaSign::opener() {
 
 void rsaSign::start(int C, char **V){
     int mode = this->testParam(C,V);
+    if(mode==0){
+        this->generatePairKey();
+    }
+    if(mode==1){
+        this->Sign();
+    }
+    if(mode==2){
+        this->CheckSign();
+    }
 }
 
 void rsaSign::help() {
-    cout<<"help"<<endl;
+    cout<<"\thelp"<<endl;
+    cout<<"./e -sk - generate pair keys"<<endl;
+    cout<<"./e --sign - sign msg"<<endl;
+    cout<<"./e --check-sign - check signed msg"<<endl;
+    cout<<""<<endl;
 }
 
 int rsaSign::testParam(int C, char **V) {
@@ -34,6 +47,7 @@ int rsaSign::testParam(int C, char **V) {
     if(C==2){
         if(!strcmp(V[1],"-h")){
             this->help();
+            exit(0);
         }
         if(!strcmp(V[1],"--simple")){
             cout<<"enter Number: ";
@@ -75,13 +89,13 @@ int rsaSign::testParam(int C, char **V) {
             cout<<"function Es = "<<countEs(a,b,c)<<endl;
         }
         if(!strcmp(V[1],"-sk")){
-            generatePairKey();
+            return 0;
         }
         if(!strcmp(V[1],"--sign")){
-            this->Sign();
+            return 1;
         }
         if(!strcmp(V[1],"--check-sign")){
-            this->CheckSign();
+            return 2;
         }
         if(!strcmp(V[1],"--mod")){
             int a,b,c;
@@ -94,7 +108,8 @@ int rsaSign::testParam(int C, char **V) {
             this->modFunc(a,b,c);
         }
     }
-    return -1;
+    cout<<"use -h for help"<<endl;
+    exit(0);
 }
 
 void rsaSign::showData() {
@@ -258,7 +273,7 @@ int rsaSign::generatePairKey() {
         cin>>e;
         ChooseEs = checkEsChoose(e);
     }
-    showAllData();
+    showData();
     return 0;
 }
 
