@@ -40,7 +40,7 @@ public:
         void CheckSign();
         int modFunc(int x, int y, int z);
         void Encrypt();
-        void Decript();
+        void Decrypt();
 private:
         int mod,phi,p,q,e,d, msg;
         vector<int>Es, Ds;

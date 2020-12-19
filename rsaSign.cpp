@@ -334,7 +334,7 @@ void rsaSign::Encrypt() {
     cout<<"encrypt msg = "<<dMsg<<endl;
 }
 
-void rsaSign::Decript() {
+void rsaSign::Decrypt() {
     cout<<"Enter encrypt message: ";
     cin>>msg;
     cout<<"Enter SK: ";
