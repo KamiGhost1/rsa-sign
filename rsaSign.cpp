@@ -380,7 +380,7 @@ void rsaSign::EncryptFile(char *input, char *output) {
     }
     fclose(fin);
     fout.close();
-    cout<<"the file "<<input<<" was encrypted and saved in "<<output<<endl;
+    cout<<"\nthe file "<<input<<" was encrypted and saved in "<<output<<endl;
 }
 void rsaSign::DecryptFile(char *input, char *output) {
     ifstream fin;
@@ -408,5 +408,5 @@ void rsaSign::DecryptFile(char *input, char *output) {
     }
     fin.close();
     fout.close();
-    cout<<"the file "<<input<<" was decrypted and saved in "<<output<<endl;
+    cout<<"\nthe file "<<input<<" was decrypted and saved in "<<output<<endl;
 }

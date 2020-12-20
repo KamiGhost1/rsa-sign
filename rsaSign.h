@@ -46,8 +46,7 @@ public:
         void DecryptFile(char *input, char *output);
 private:
         int mod,phi,p,q,e,d, msg;
-        vector<int>Es, Ds, bInt, bDig;
-        vector<char> bStr;
+        vector<int>Es, Ds;
 };
 
 
