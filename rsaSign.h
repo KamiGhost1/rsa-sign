@@ -10,6 +10,7 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+#include <fstream>
 #define MAX_GENERATE_D 1000
 //#define debag_main
 
@@ -45,7 +46,8 @@ public:
         void DecryptFile(char *input, char *output);
 private:
         int mod,phi,p,q,e,d, msg;
-        vector<int>Es, Ds;
+        vector<int>Es, Ds, bInt, bDig;
+        vector<char> bStr;
 };
 
 

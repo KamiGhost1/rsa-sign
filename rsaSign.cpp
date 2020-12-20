@@ -365,7 +365,8 @@ void rsaSign::EncryptFile(char *input, char *output) {
         cout<<"file not found!!"<<endl;
         exit(2);
     }
-    FILE *fout=fopen(output,"w");
+    ofstream fout;
+    fout.open(output);
     cout<<"Enter PK: ";
     cin>>e;
     cout<<"Enter N: ";
@@ -374,38 +375,38 @@ void rsaSign::EncryptFile(char *input, char *output) {
     int symb;
     while((ch=fgetc(fin)) != EOF){
         symb = (int)ch;
-        cout<<symb<<" ";
         symb = modFunc(symb,e,mod);
-        cout<<symb<<" ";
-        ch = (char)symb;
-        cout<<ch<<" "<<(int)ch<<endl;
-        fwrite(&symb, sizeof(char),1,fout);
+        fout<<symb<<endl;
     }
-    fcloseall();
+    fclose(fin);
+    fout.close();
     cout<<"the file "<<input<<" was encrypted and saved in "<<output<<endl;
 }
 void rsaSign::DecryptFile(char *input, char *output) {
-    FILE *fin=fopen(input,"r");
+    ifstream fin;
+    fin.open(input);
     if(!fin){
         cout<<"file not found!!"<<endl;
         exit(2);
     }
-    FILE *fout=fopen(output,"w");
+    ofstream fout;
+    fout.open(output);
     cout<<"Enter SK: ";
     cin>>d;
     cout<<"Enter N: ";
     cin>>mod;
-    char ch;
+    string str;
     int symb;
-    while((ch=fgetc(fin)) != EOF){
-        symb = (int)ch;
-        cout<<symb<<" ";
+    while(fin){
+        getline(fin,str);
+        symb = atoi(str.c_str());
+        if(symb == 0){
+            break;
+        }
         symb = modFunc(symb,d,mod);
-        cout<<symb<<" ";
-        ch = (char)symb;
-        cout<<ch<<" "<<(int)ch<<endl;
-        fwrite(&symb, sizeof(char),1,fout);
+        fout<<(char)symb;
     }
-    fcloseall();
+    fin.close();
+    fout.close();
     cout<<"the file "<<input<<" was decrypted and saved in "<<output<<endl;
 }
