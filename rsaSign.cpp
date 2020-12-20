@@ -47,6 +47,10 @@ void rsaSign::help() {
     cout<<"./e -sk - generate pair keys"<<endl;
     cout<<"./e --sign - sign msg"<<endl;
     cout<<"./e --check-sign - check signed msg"<<endl;
+    cout<<"./e -e - encrypt msg"<<endl;
+    cout<<"./e -e -i <path> -o <path> - encrypt txt file"<<endl;
+    cout<<"./e -d - decrypt msg"<<endl;
+    cout<<"./e -d -i <path> -o <path> - decrypt txt file"<<endl;
     cout<<""<<endl;
 }
 
@@ -292,6 +296,10 @@ int rsaSign::generatePairKey() {
         ChooseEs = checkDsChoose(d);
     }
     generatePkey(d,phi);
+    if(Es.size()==0){
+        cout<<"PK size = 0, use any P and Q"<<endl;
+        exit(5);
+    }
     ChooseEs = 0;
     while(!ChooseEs){
         viewEs();
@@ -300,6 +308,8 @@ int rsaSign::generatePairKey() {
         ChooseEs = checkEsChoose(e);
     }
     showData();
+    Es.clear();
+    Ds.clear();
     return 0;
 }
 
@@ -360,7 +370,7 @@ void rsaSign::Decrypt() {
 }
 
 void rsaSign::EncryptFile(char *input, char *output) {
-    FILE *fin=fopen(input,"r");
+    FILE *fin=fopen(input,"rb");
     if(!fin){
         cout<<"file not found!!"<<endl;
         exit(2);
@@ -401,7 +411,7 @@ void rsaSign::DecryptFile(char *input, char *output) {
         getline(fin,str);
         symb = atoi(str.c_str());
         if(symb == 0){
-            break;
+            continue;
         }
         symb = modFunc(symb,d,mod);
         fout<<(char)symb;
